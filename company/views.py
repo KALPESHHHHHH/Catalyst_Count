@@ -124,21 +124,21 @@ def filter_companies(request):
         locality = form.cleaned_data.get('locality')
         country = form.cleaned_data.get('country')
 
-        # Build the filters dynamically
+        # Build the filters dynamically using exact matches
         if name:
-            filters &= Q(name__icontains=name)
+            filters &= Q(name__exact=name)  # Use exact match
         if domain:
-            filters &= Q(domain__icontains=domain)
+            filters &= Q(domain__exact=domain)  # Use exact match
         if year_founded is not None:
-            filters &= Q(year_founded=year_founded)
+            filters &= Q(year_founded=year_founded)  # Match directly
         if industry:
-            filters &= Q(industry__icontains=industry)
+            filters &= Q(industry__exact=industry)  # Use exact match
         if size_range:
-            filters &= Q(size_range__icontains=size_range)
+            filters &= Q(size_range__exact=size_range)  # Use exact match
         if locality:
-            filters &= Q(locality__icontains=locality)
+            filters &= Q(locality__exact=locality)  # Use exact match
         if country:
-            filters &= Q(country__icontains=country)
+            filters &= Q(country__exact=country)  # Use exact match
 
         # Apply the filters to the queryset if any filters are set
         if filters:
@@ -190,6 +190,10 @@ def upload_data(request):
         form = UploadFileForm()
     return render(request, 'upload_data.html', {'form': form})
 
+from django.db.models import Q
+from rest_framework import generics
+from .models import CompanyCSVData
+from .serializers import CompanyDataSerializer
 
 # DRF API View for Company Data
 class CompanyListCreateView(generics.ListCreateAPIView):
@@ -212,19 +216,19 @@ class CompanyListCreateView(generics.ListCreateAPIView):
 
         # Build the filters dynamically
         if name:
-            filters &= Q(name__icontains=name)
+            filters &= Q(name__exact=name)  # Use exact match
         if domain:
-            filters &= Q(domain__icontains=domain)
+            filters &= Q(domain__exact=domain)  # Use exact match
         if year_founded:
-            filters &= Q(year_founded=year_founded)
+            filters &= Q(year_founded=year_founded)  # Match directly
         if industry:
-            filters &= Q(industry__icontains=industry)
+            filters &= Q(industry__exact=industry)  # Use exact match
         if size_range:
-            filters &= Q(size_range__icontains=size_range)
+            filters &= Q(size_range__exact=size_range)  # Use exact match
         if locality:
-            filters &= Q(locality__icontains=locality)
+            filters &= Q(locality__exact=locality)  # Use exact match
         if country:
-            filters &= Q(country__icontains=country)
+            filters &= Q(country__exact=country)  # Use exact match
 
         # Apply the filters to the queryset
         if filters:
