@@ -21,6 +21,8 @@ from django.db import IntegrityError
 import logging
 from django.db.models import Q
 import csv
+from rest_framework import generics
+from .serializers import CompanyDataSerializer
 import pandas as pd
 import io
 from celery import shared_task  # Assuming Celery is used for background processing
@@ -110,7 +112,7 @@ def remove_user(request):
 def filter_companies(request):
     form = CompanyFilterForm(request.GET or None)
     companies = CompanyCSVData.objects.all()  # Get all companies initially
-    count = 0  # Initialize count
+    filters = Q()  # Initialize an empty Q object for complex queries
 
     if form.is_valid():
         # Fetch cleaned data from the form
@@ -122,21 +124,25 @@ def filter_companies(request):
         locality = form.cleaned_data.get('locality')
         country = form.cleaned_data.get('country')
 
-        # Apply filters based on user input
+        # Build the filters dynamically
         if name:
-            companies = companies.filter(name__icontains=name)
+            filters &= Q(name__icontains=name)
         if domain:
-            companies = companies.filter(domain__icontains=domain)
+            filters &= Q(domain__icontains=domain)
         if year_founded is not None:
-            companies = companies.filter(year_founded=year_founded)
+            filters &= Q(year_founded=year_founded)
         if industry:
-            companies = companies.filter(industry__icontains=industry)
+            filters &= Q(industry__icontains=industry)
         if size_range:
-            companies = companies.filter(size_range__icontains=size_range)
+            filters &= Q(size_range__icontains=size_range)
         if locality:
-            companies = companies.filter(locality__icontains=locality)
+            filters &= Q(locality__icontains=locality)
         if country:
-            companies = companies.filter(country__icontains=country)
+            filters &= Q(country__icontains=country)
+
+        # Apply the filters to the queryset if any filters are set
+        if filters:
+            companies = companies.filter(filters)
 
     count = companies.count()  # Get the count of filtered companies
 
@@ -144,7 +150,6 @@ def filter_companies(request):
     records = companies.values()  # Fetch all records
 
     return render(request, 'query_builder.html', {'form': form, 'count': count, 'records': records})
-
 def upload_data(request):
     if request.method == 'POST':
         form = UploadFileForm(request.POST, request.FILES)
@@ -185,6 +190,7 @@ def upload_data(request):
         form = UploadFileForm()
     return render(request, 'upload_data.html', {'form': form})
 
+
 # DRF API View for Company Data
 class CompanyListCreateView(generics.ListCreateAPIView):
     queryset = CompanyCSVData.objects.all()
@@ -192,6 +198,9 @@ class CompanyListCreateView(generics.ListCreateAPIView):
 
     def get_queryset(self):
         queryset = super().get_queryset()
+        # Initialize an empty Q object for complex queries
+        filters = Q()
+
         # Apply filtering based on request parameters
         name = self.request.query_params.get('name')
         domain = self.request.query_params.get('domain')
@@ -201,19 +210,24 @@ class CompanyListCreateView(generics.ListCreateAPIView):
         locality = self.request.query_params.get('locality')
         country = self.request.query_params.get('country')
 
+        # Build the filters dynamically
         if name:
-            queryset = queryset.filter(name__icontains=name)
+            filters &= Q(name__icontains=name)
         if domain:
-            queryset = queryset.filter(domain__icontains=domain)
+            filters &= Q(domain__icontains=domain)
         if year_founded:
-            queryset = queryset.filter(year_founded=year_founded)
+            filters &= Q(year_founded=year_founded)
         if industry:
-            queryset = queryset.filter(industry__icontains=industry)
+            filters &= Q(industry__icontains=industry)
         if size_range:
-            queryset = queryset.filter(size_range__icontains=size_range)
+            filters &= Q(size_range__icontains=size_range)
         if locality:
-            queryset = queryset.filter(locality__icontains=locality)
+            filters &= Q(locality__icontains=locality)
         if country:
-            queryset = queryset.filter(country__icontains=country)
+            filters &= Q(country__icontains=country)
+
+        # Apply the filters to the queryset
+        if filters:
+            queryset = queryset.filter(filters)
 
         return queryset
