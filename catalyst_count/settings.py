@@ -61,13 +61,13 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'company',  # Our custom app
+    'company',  
     'django.contrib.sites',
     'allauth',
     'allauth.account',
     'allauth.socialaccount',
-    'rest_framework',  # DRF for API
-    'django_celery_results',  # Celery for background processing
+    'rest_framework',  
+    'django_celery_results', 
 ]
 
 MIDDLEWARE = [
@@ -77,7 +77,7 @@ MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
-    'allauth.account.middleware.AccountMiddleware',  # Add AccountMiddleware here
+    'allauth.account.middleware.AccountMiddleware',  
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
@@ -109,9 +109,8 @@ WSGI_APPLICATION = 'catalyst_count.wsgi.application'
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 import environ
 
-# Initialise environment variables
 env = environ.Env()
-environ.Env.read_env()  # This loads the variables from the .env file
+environ.Env.read_env()  
 
 DATABASES = {
     'default': {
@@ -132,7 +131,6 @@ AUTHENTICATION_BACKENDS = [
     'allauth.account.auth_backends.AuthenticationBackend',
 ]
 
-SITE_ID = 1
 import os
 
 
@@ -142,8 +140,6 @@ STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'static'),
 ]
 
-# Uncomment this if you're running in production and want to collect static files
-# STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
 # Celery settings for background processing
 CELERY_BROKER_URL = 'redis://localhost:6379/0'
@@ -169,8 +165,6 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 
-# Internationalization
-# https://docs.djangoproject.com/en/5.1/topics/i18n/
 
 LANGUAGE_CODE = 'en-us'
 
@@ -182,10 +176,6 @@ USE_TZ = True
 
 SITE_ID = 1
 
-# Static files (CSS, JavaScript, Images)
-# https://docs.djangoproject.com/en/5.1/howto/static-files/
-
-# settings.py
 
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [
@@ -197,8 +187,6 @@ REST_FRAMEWORK = {
     ],
 }
 
-# settings.py
-# Email settings
 EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_PORT = 587
@@ -250,10 +238,10 @@ INSTALLED_APPS += ['django_q',]
 
 Q_CLUSTER = {
     'name': 'DjangoQ',
-    'workers': 4,  # Number of workers
-    'recycle': 500,  # Recycle workers after they process this many tasks
-    'timeout': 60,  # Time (in seconds) before a task times out
-    'retry': 120,  # Time (in seconds) before a failed task is retried
-    'bulk': 10,  # Number of tasks to process at once
-    'orm': 'default',  # Database connection (default is 'default')
+    'workers': 4,  
+    'recycle': 500,  
+    'timeout': 60, 
+    'retry': 120, 
+    'bulk': 10, 
+    'orm': 'default', 
 }
