@@ -1,0 +1,162 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login to Continue</title>
+
+    <!-- Bootstrap 4 CSS from CDN -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+
+    <!-- Font Awesome for icons (optional) -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css">
+
+    <!-- Link to your custom CSS file -->
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+
+    <!-- Custom Styles -->
+    <style>
+        body {
+            background-color: #f0f4f8; /* Soft light background */
+            font-family: Arial, sans-serif; /* Clean font for readability */
+        }
+
+        .container {
+            background-color: #fff; /* White background for the container */
+            padding: 40px; /* Padding around the content */
+            border-radius: 10px; /* Rounded corners */
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15); /* Subtle shadow */
+            max-width: 400px; /* Max width for the form */
+            margin-top: 100px; /* Center vertically */
+            border: 1px solid #e1e1e1; /* Light border for definition */
+        }
+
+        h1 {
+            text-align: center; /* Centered heading */
+            margin-bottom: 30px; /* Margin below heading */
+            color: #343a40; /* Dark color for text */
+        }
+
+        .form-group label {
+            font-weight: bold; /* Bold labels for clarity */
+        }
+
+        .btn {
+            height: 50px; /* Uniform button height */
+            font-size: 16px; /* Larger font size for better readability */
+            border-radius: 5px; /* Slightly rounded button corners */
+            transition: all 0.3s ease; /* Smooth transition for hover effects */
+        }
+
+        .btn-primary {
+            background-color: #007bff; /* Primary button color */
+            border: none; /* Remove border */
+        }
+
+        .btn-secondary {
+            background-color: #6c757d; /* Secondary button color */
+            border: none; /* Remove border */
+        }
+
+        .btn-primary:hover {
+            background-color: #0056b3; /* Darker blue on hover */
+            transform: translateY(-2px); /* Lift effect on hover */
+        }
+
+        .btn-secondary:hover {
+            background-color: #5a6268; /* Darker grey on hover */
+            transform: translateY(-2px); /* Lift effect on hover */
+        }
+
+        .button-container {
+            display: flex; /* Flexbox for horizontal alignment */
+            margin-top: 20px; /* Space above buttons */
+        }
+
+        .button-container .btn {
+            flex: 1; /* Make buttons fill available space */
+            margin-right: 5px; /* Space between buttons */
+        }
+
+        .button-container .btn:last-child {
+            margin-right: 0; /* No right margin for the last button */
+        }
+
+        .alert {
+            margin-top: 20px; /* Space above alert */
+        }
+        /* Mobile View Adjustments */
+@media (max-width: 576px) {
+    .container {
+        padding: 20px; /* Less padding on mobile */
+        margin: 20px; /* Adjust margin for smaller screens */
+    }
+
+    h1 {
+        font-size: 24px; /* Slightly smaller heading */
+        margin-bottom: 20px; /* Less space below heading */
+    }
+
+    .form-group {
+        margin-bottom: 15px; /* Reduce space between form elements */
+    }
+
+    .button-container {
+        display: flex; /* Use flexbox for horizontal alignment */
+        justify-content: space-between; /* Space between buttons */
+        flex-wrap: wrap; /* Wrap buttons if there's not enough space */
+    }
+
+    .button-container .btn {
+        flex: 1; /* Equal width for buttons */
+        margin: 5px; /* Space around buttons */
+        height: 45px; /* Consistent height for buttons */
+        font-size: 14px; /* Button font size */
+    }
+
+    .alert {
+        font-size: 14px; /* Slightly smaller font for alerts */
+    }
+}
+
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1>Login</h1>
+        <form method="POST" action="{% url 'account_login' %}">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="login">Email or Username <span></span></label>
+                <input type="text" name="login" class="form-control" required>
+            </div>
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" name="password" class="form-control" required>
+            </div>
+            <div class="button-container">
+                <button type="submit" class="btn btn-primary">Login</button>
+                <button type="button" class="btn btn-secondary" onclick="location.href='{% url 'account_signup' %}'">Register</button>
+            </div>
+        </form>
+
+        <!-- Display messages if any -->
+        {% if messages %}
+            <div class="alert alert-info">
+                {% for message in messages %}
+                    <p>{{ message }}</p>
+                {% endfor %}
+            </div>
+        {% endif %}
+    </div>
+
+    <!-- jQuery, Popper.js, and Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+</body>
+
+</html>

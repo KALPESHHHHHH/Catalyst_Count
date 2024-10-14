@@ -1,0 +1,111 @@
+/* Reset some default styles */
+body, h1, form, label {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+/* Full-height container */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f9f9f9; /* Light background color */
+}
+
+/* Main container styling */
+.container {
+    width: 90%; /* Responsive width */
+    max-width: 1200px; /* Maximum width */
+    background-color: #ffffff; /* White background for the form */
+    border-radius: 8px; /* Rounded corners */
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* Subtle shadow for depth */
+    padding: 20px;
+    margin: 20px auto; /* Centering the container with margin */
+}
+
+/* Heading styling */
+.container h1 {
+    text-align: center;
+    margin-bottom: 20px; /* Space below heading */
+    color: #333; /* Darker color for heading */
+}
+
+/* Form styling */
+.container form {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr); /* Three columns */
+    gap: 20px; /* Space between grid items */
+}
+
+/* Label styling */
+.container label {
+    display: block;
+    margin-bottom: 5px; /* Space below label */
+    color: #555; /* Gray color for labels */
+}
+
+/* Input and select styling */
+.container input[type="text"],
+.container input[type="number"],
+.container select {
+    width: 100%; /* Full width */
+    padding: 10px; /* Padding for better touch area */
+    border: 1px solid #ccc; /* Border color */
+    border-radius: 4px; /* Rounded corners */
+    transition: border-color 0.3s; /* Transition for border color */
+}
+
+/* Input focus styling */
+.container input:focus,
+.container select:focus {
+    border-color: #007BFF; /* Highlight border on focus */
+    outline: none; /* Remove default outline */
+}
+
+/* Button container styling */
+.container div {
+    grid-column: span 3; /* Span full width */
+    display: flex; /* Use flexbox for horizontal alignment */
+    justify-content: space-between; /* Space between buttons */
+    margin-top: 20px; /* Space above the button container */
+}
+
+/* Button styling */
+.container button {
+    flex: 1; /* Allow buttons to grow equally */
+    padding: 10px 15px; /* Padding for buttons */
+    border: none; /* Remove default border */
+    border-radius: 4px; /* Rounded corners */
+    background-color: #007BFF; /* Primary button color */
+    color: #ffffff; /* White text color */
+    cursor: pointer; /* Pointer on hover */
+    transition: background-color 0.3s; /* Transition for background color */
+}
+
+/* Button hover styling */
+.container button:hover {
+    background-color: #0056b3; /* Darker shade on hover */
+}
+
+/* Reset button styling */
+.container button[type="reset"] {
+    background-color: #6c757d; /* Secondary button color */
+}
+
+.container button[type="reset"]:hover {
+    background-color: #5a6268; /* Darker shade on hover */
+}
+
+/* Results section styling */
+.container #results {
+    margin-top: 20px; /* Space above results */
+}
+
+.container #records-found {
+    font-weight: bold; /* Bold for emphasis */
+    margin-bottom: 10px; /* Space below record count */
+}
+
+.container #record-list {
+    list-style: none; /* Remove bullets */
+    padding: 0; /* Remove default padding */
+}

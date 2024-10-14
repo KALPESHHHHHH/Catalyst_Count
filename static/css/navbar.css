@@ -1,0 +1,26 @@
+/* Set background image for the entire body */
+body {
+    background-image: url('{% static "img/indexx.jpg" %}'); /* Use the correct path for the background image */
+    background-size: cover; /* Cover the whole screen */
+    background-position: center; /* Center the image */
+    background-repeat: no-repeat; /* Prevent the image from repeating */
+    height: 100vh; /* Ensure it covers the full height of the viewport */
+    margin: 0; /* Remove default margin */
+}
+
+/* Navbar styling */
+.navbar {
+    background-color: rgba(255, 255, 255, 0.8); /* Semi-transparent background for navbar */
+    border: none; /* Remove any default borders */
+    padding: 1rem; /* Add some padding */
+}
+
+/* Ensure navbar items are easily readable */
+.nav-link {
+    color: #333; /* Change link color for contrast */
+}
+
+/* Optional: Change link color on hover */
+.nav-link:hover {
+    color: #007bff; /* Bootstrap primary color for hover effect */
+}

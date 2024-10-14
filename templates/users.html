@@ -1,0 +1,143 @@
+{% load static %}
+{% include 'navbar.html' %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Users</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="{% static 'css/users.css' %}">
+    <!-- Add Full jQuery -->
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+</head>
+<body>
+    <div class="container">
+        <div id="result-message">{{ message }}</div>
+        <div class="header-container">
+            <h1>Users</h1>
+            <button id="add-user-btn">Add User</button>
+        </div>
+
+        <div id="user-list">
+            <table>
+                <thead>
+                    <tr>
+                        <th>User Name</th>
+                        <th>User Email</th>
+                        <th>User Status</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for user in users %}
+                    <tr id="user-{{ user.id }}">
+                        <td>{{ user.username }}</td>
+                        <td>{{ user.email }}</td>
+                        <td>
+                            {% if user.is_active %}
+                                Active
+                            {% else %}
+                                Inactive
+                            {% endif %}
+                        </td>
+                        <td><button class="remove-btn" data-id="{{ user.id }}">✖</button></td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+
+        <!-- Add User Modal -->
+        <div id="add-user-modal" style="display:none;">
+            <h2>Add User</h2>
+            <form id="add-user-form">
+                <label for="username">User Name:</label>
+                <input type="text" id="username" name="username" required>
+
+                <label for="email">User Email:</label>
+                <input type="email" id="email" name="email" required>
+
+                <label for="is_active">User Status:</label>
+                <select id="is_active" name="is_active">
+                    <option value="True">Active</option>
+                    <option value="False">Inactive</option>
+                </select>
+
+                <button type="submit">Add User</button>
+                <button type="button" id="close-modal">Cancel</button>
+            </form>
+        </div>
+    </div>
+
+<script>
+$(document).ready(function() {
+    // Show the add user modal when the button is clicked
+    $('#add-user-btn').on('click', function() {
+        $('#add-user-modal').show();
+    });
+
+    // Close the modal
+    $('#close-modal').on('click', function() {
+        $('#add-user-modal').hide();
+    });
+
+    // Handle form submission for adding a new user
+    $('#add-user-form').on('submit', function(e) {
+        e.preventDefault(); // Prevent default form submission
+        const formData = $(this).serialize(); // Serialize form data
+
+        $.ajax({
+            type: 'POST',
+            url: '{% url "add_user" %}', // Ensure the URL is correctly set up in urls.py
+            data: formData,
+            headers: {
+                'X-CSRFToken': '{{ csrf_token }}' // Ensure CSRF token is included
+            },
+            success: function(response) {
+                // Append new user to the table
+                $('#user-list tbody').append(`
+                    <tr id="user-${response.user_id}">
+                        <td>${response.username}</td>
+                        <td>${response.email}</td>
+                        <td>${response.is_active ? 'Active' : 'Inactive'}</td>
+                        <td><button class="remove-btn" data-id="${response.user_id}">✖</button></td>
+                    </tr>
+                `);
+                $('#add-user-modal').hide(); // Hide the modal
+                $('#add-user-form')[0].reset(); // Reset the form
+                $('#result-message').text(response.message); // Display success message
+            },
+            error: function(xhr) {
+                $('#result-message').text(xhr.responseJSON.message); // Display error message
+            }
+        });
+    });
+
+    // Handle user removal (logout)
+    $(document).on('click', '.remove-btn', function() {
+        const userId = $(this).data('id');
+
+        if (confirm("Are you sure you want to log out this user?")) {
+            $.ajax({
+                type: 'POST',
+                url: '{% url "remove_user" %}', // Ensure the URL is correctly set up in urls.py
+                data: {
+                    'user_id': userId,
+                    'csrfmiddlewaretoken': '{{ csrf_token }}'  // Include CSRF token
+                },
+                success: function(response) {
+                    // Remove the user row from the table
+                    $(`#user-${userId}`).remove();
+                    $('#result-message').text(response.message); // Display success message
+                },
+                error: function(xhr) {
+                    $('#result-message').text(xhr.responseJSON.message); // Display error message
+                }
+            });
+        }
+    });
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,217 @@
+{% load static %}
+{% include 'navbar.html' %}
+<!DOCTYPE html>
+<html lang="en">
+   
+    
+<head>
+    <meta charset="UTF-8">
+    <title>Upload CSV File</title>
+    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    <style>
+       /* General Styles */
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #f4f4f4; /* Light background color */
+    margin: 0;
+    padding: 20px;
+    color: #333; /* Text color */
+}
+
+h1 {
+    color: #4CAF50; /* Green color for headings */
+    text-align: center; /* Center align the heading */
+    margin-bottom: 20px; /* Space below the heading */
+    animation: fadeIn 1s; /* Fade-in animation for the heading */
+}
+
+#upload-form {
+    background-color: #fff; /* White background for form */
+    padding: 20px;
+    border-radius: 10px; /* Rounded corners */
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1); /* Shadow for depth */
+    max-width: 500px; /* Max width for the form */
+    margin: auto; /* Center the form horizontally */
+    animation: slideIn 0.5s; /* Slide-in animation for the form */
+    transition: box-shadow 0.3s; /* Smooth transition for shadow */
+}
+
+#upload-form:hover {
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2); /* Increase shadow on hover */
+}
+
+progress {
+    width: 100%;
+    height: 20px;
+    border-radius: 5px; /* Rounded corners for progress bar */
+    margin-top: 10px;
+    display: none; /* Hide by default */
+    background-color: #e0e0e0; /* Light gray background */
+    animation: progressAnim 2s ease-in-out; /* Animation for progress */
+}
+
+#status {
+    margin-top: 10px;
+    font-weight: bold;
+    text-align: center; /* Center align the status text */
+    animation: fadeIn 0.5s; /* Fade-in animation for status */
+}
+
+#error-messages {
+    color: red;
+    margin-top: 10px;
+    text-align: center; /* Center align error messages */
+}
+
+/* Button Styles */
+button {
+    background-color: #4CAF50; /* Green background for buttons */
+    color: white;
+    padding: 10px 15px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px; /* Larger font size */
+    transition: background-color 0.3s, transform 0.3s; /* Smooth transition */
+    width: 100%; /* Full width for the button */
+    margin-top: 10px; /* Space above the button */
+}
+
+button:hover {
+    background-color: #45a049; /* Darker green on hover */
+    transform: scale(1.05); /* Slightly enlarge on hover */
+}
+
+/* File Input Styles */
+input[type="file"] {
+    margin-top: 10px; /* Space above file input */
+    display: block; /* Block display for proper spacing */
+    width: 100%; /* Full width for the file input */
+    padding: 10px; /* Padding for better click area */
+    border: 1px solid #ccc; /* Light border */
+    border-radius: 5px; /* Rounded corners */
+    font-size: 16px; /* Larger font size */
+    transition: border-color 0.3s; /* Smooth transition for border */
+}
+
+input[type="file"]:focus {
+    border-color: #4CAF50; /* Green border on focus */
+    outline: none; /* Remove default outline */
+}
+
+/* Animation keyframes */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes slideIn {
+    from {
+        transform: translateY(-20px); /* Slide in from above */
+        opacity: 0; /* Start invisible */
+    }
+    to {
+        transform: translateY(0); /* End at normal position */
+        opacity: 1; /* End visible */
+    }
+}
+
+@keyframes progressAnim {
+    from {
+        width: 0; /* Start width at 0 */
+    }
+    to {
+        width: 100%; /* End width at 100% */
+    }
+}
+
+/* Responsive Design for Mobile View */
+@media (max-width: 600px) {
+    body {
+        padding: 10px; /* Reduce padding for mobile view */
+    }
+
+    h1 {
+        font-size: 24px; /* Smaller heading on mobile */
+    }
+
+    #upload-form {
+        padding: 15px; /* Reduce form padding */
+    }
+
+    button {
+        font-size: 14px; /* Smaller button font size */
+        padding: 8px 10px; /* Adjust padding */
+    }
+
+    input[type="file"] {
+        font-size: 14px; /* Smaller file input font size */
+    }
+
+    progress {
+        height: 15px; /* Adjust progress bar height for mobile */
+    }
+
+    #status {
+        font-size: 14px; /* Adjust font size for status */
+    }
+
+    #error-messages {
+        font-size: 14px; /* Adjust font size for error messages */
+    }
+}
+
+    </style>
+</head>
+<body>
+    <h1>Upload a CSV File</h1>
+    <form id="upload-form" method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+        {{ form.as_p }} <!-- Renders the form fields dynamically -->
+        <button type="submit">Upload</button>
+    </form>
+    <progress id="upload-progress" value="0" max="100"></progress>
+    <div id="status"></div>
+    <div id="error-messages"></div>
+    <script>
+        $('#upload-form').on('submit', function(e) {
+            e.preventDefault(); // Prevent the default form submission
+            var formData = new FormData(this);
+            var progressBar = $('#upload-progress');
+            progressBar.show(); // Show the progress bar
+    
+            $.ajax({
+                xhr: function() {
+                    var xhr = new window.XMLHttpRequest();
+                    xhr.upload.addEventListener("progress", function(evt) {
+                        if (evt.lengthComputable) {
+                            var percentComplete = (evt.loaded / evt.total) * 100;
+                            progressBar.val(percentComplete); // Update progress bar
+                        }
+                    }, false);
+                    return xhr;
+                },
+                type: 'POST',
+                url: $(this).attr('action'),
+                data: formData,
+                contentType: false,
+                processData: false,
+                success: function(data) {
+                    $('#status').text(data.message).css('color', 'green');
+                    $('#error-messages').empty(); // 
+                    window.location.href = "{% url 'filter_companies' %}"; // Assuming 'query_builder' is the URL name in Django
+                },
+                error: function(xhr) {
+                    var errorMessage = xhr.responseJSON ? xhr.responseJSON.message : 'Upload failed.';
+                    $('#status').text(errorMessage).css('color', 'red');
+                }
+            });
+        });
+    </script>
+    
+</body>
+</html>

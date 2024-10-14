@@ -1,0 +1,73 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <title>Company Filter</title>
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <!-- Optional: Include Bootstrap Theme -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap-theme.min.css">
+</head>
+<body>
+
+{% include 'navbar.html' %}
+
+<div class="container mt-4">
+    <form method="get" action="{% url 'filter_companies' %}" class="mb-4">
+        {{ form.as_p }}
+        <button type="submit" class="btn btn-primary">Filter</button>
+    </form>
+
+    {% if count is not None %}
+        <h2>Count of Filtered Companies: {{ count }}</h2>
+    {% endif %}
+
+    {% if companies %}
+        <table class="table table-striped">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Name</th>
+                    <th>Domain</th>
+                    <th>Year Founded</th>
+                    <th>Industry</th>
+                    <th>Size Range</th>
+                    <th>Locality</th>
+                    <th>Country</th>
+                    <th>LinkedIn URL</th>
+                    <th>Current Employee Estimate</th>
+                    <th>Total Employee Estimate</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for company in companies %}
+                    <tr>
+                        <td>{{ company.id }}</td>
+                        <td>{{ company.name }}</td>
+                        <td>{{ company.domain }}</td>
+                        <td>{{ company.year_founded }}</td>
+                        <td>{{ company.industry }}</td>
+                        <td>{{ company.size_range }}</td>
+                        <td>{{ company.locality }}</td>
+                        <td>{{ company.country }}</td>
+                        <td>{{ company.linkedin_url }}</td>
+                        <td>{{ company.current_employee_estimate }}</td>
+                        <td>{{ company.total_employee_estimate }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    {% endif %}
+</div>
+
+<!-- jQuery and Bootstrap Bundle with Popper.js -->
+<script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.3/dist/umd/popper.min.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+</body>
+</html>

@@ -1,0 +1,17 @@
+.env
+
+
+
+
+
+
+
+
+
+
+
+$env:POSTGRES_USER="catalyst_user"
+$env:POSTGRES_PASSWORD="catalyst_pass"
+$env:POSTGRES_HOST="localhost"
+$env:POSTGRES_DB="catalyst_count_db"
+$env:POSTGRES_PORT="5432"
