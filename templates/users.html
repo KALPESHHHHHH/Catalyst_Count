@@ -2,20 +2,171 @@
 {% include 'navbar.html' %}
 <!DOCTYPE html>
 <html lang="en">
-    <style>
-
-
-        
-    </style>
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Users</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-    <link rel="stylesheet" href="{% static 'css/users.css' %}">
-    <!-- Add Full jQuery -->
-    <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
+    
+    <title>Users</title>
+    <!-- Bootstrap CSS -->
+   <style>
+    body {
+        font-family: 'Helvetica Neue', Arial, sans-serif !important;
+        background-color: #f0f4f8 !important;
+        color: #444 !important;
+        line-height: 1.6 !important;
+    }
+    
+    .container {
+        max-width: 1200px !important;
+        margin: 40px auto !important;
+        padding: 30px !important;
+        background-color: #ffffff !important;
+        border-radius: 12px !important;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1) !important;
+    }
+    
+    .header-container {
+        display: flex !important;
+        justify-content: space-between !important;
+        align-items: center !important;
+        margin-bottom: 30px !important;
+    }
+    
+    .header-container h1 {
+        font-size: 32px !important;
+        color: #007bff !important;
+        margin: 0 !important;
+    }
+    
+    button {
+        background-color: #007bff !important;
+        color: #fff !important;
+        border: none !important;
+        padding: 8px 15px !important;
+        border-radius: 6px !important;
+        cursor: pointer !important;
+        transition: background-color 0.3s !important;
+        font-size: 14px !important;
+    }
+    
+    button:hover {
+        background-color: #0056b3 !important;
+    }
+    
+    table {
+        width: 100% !important;
+        border-collapse: collapse !important;
+        margin-top: 20px !important;
+    }
+    
+    th,
+    td {
+        padding: 15px !important;
+        text-align: left !important;
+        border-bottom: 1px solid #dee2e6 !important;
+    }
+    
+    th {
+        background-color: #007bff !important;
+        color: #ffffff !important;
+        font-weight: bold !important;
+    }
+    
+    tr:nth-child(even) {
+        background-color: #f8f9fa !important;
+    }
+    
+    tr:hover {
+        background-color: #e9ecef !important;
+    }
+    
+    #add-user-modal {
+        position: fixed !important;
+        top: 50% !important;
+        left: 50% !important;
+        transform: translate(-50%, -50%) !important;
+        padding: 30px !important;
+        background-color: #ffffff !important;
+        border-radius: 10px !important;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2) !important;
+        z-index: 1000 !important;
+        width: 90% !important;
+        max-width: 400px !important;
+    }
+    
+    #add-user-form {
+        display: flex !important;
+        flex-direction: column !important;
+    }
+    
+    #add-user-form label {
+        margin-top: 15px !important;
+        font-weight: bold !important;
+    }
+    
+    #add-user-form input,
+    #add-user-form select {
+        padding: 12px !important;
+        margin-top: 5px !important;
+        border: 1px solid #ced4da !important;
+        border-radius: 6px !important;
+    }
+    
+    #result-message {
+        margin-top: 20px !important;
+        font-weight: bold !important;
+        color: #28a745 !important;
+    }
+    
+    #add-user-form button[type="submit"],
+    #add-user-form button[type="button"] {
+        width: 48% !important;
+        margin-right: 4% !important;
+    }
+    
+    #add-user-form button[type="button"] {
+        margin-right: 0 !important;
+    }
+    
+    @media (max-width: 768px) {
+        .header-container {
+            flex-direction: column !important;
+            align-items: flex-start !important;
+        }
+    
+        #add-user-btn {
+            width: 100% !important;
+            margin-top: 10px !important;
+        }
+    
+        #add-user-modal {
+            width: 95% !important;
+            max-width: none !important;
+        }
+    
+        table {
+            font-size: 14px !important;
+        }
+    
+        th,
+        td {
+            padding: 10px !important;
+        }
+    
+        #add-user-form button[type="submit"],
+        #add-user-form button[type="button"] {
+            width: 100% !important;
+            margin: 5px 0 !important;
+            padding: 10px !important;
+        }
+    
+        #add-user-form {
+            flex-direction: column !important;
+        }
+    }
+    
+</style>
 </head>
 <body>
     <div class="container">
@@ -145,5 +296,6 @@ $(document).ready(function() {
     });
 });
 </script>
+
 </body>
 </html>

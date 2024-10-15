@@ -1,26 +1,90 @@
-/* Set background image for the entire body */
-body {
-    background-image: url('{% static "img/indexx.jpg" %}'); /* Use the correct path for the background image */
-    background-size: cover; /* Cover the whole screen */
-    background-position: center; /* Center the image */
-    background-repeat: no-repeat; /* Prevent the image from repeating */
-    height: 100vh; /* Ensure it covers the full height of the viewport */
-    margin: 0; /* Remove default margin */
-}
+/* navbar.css */
 
-/* Navbar styling */
+/* Set the background color, border, and shadow for the navbar */
 .navbar {
-    background-color: rgba(255, 255, 255, 0.8); /* Semi-transparent background for navbar */
-    border: none; /* Remove any default borders */
-    padding: 1rem; /* Add some padding */
+    background-color: #ffffff !important; /* White background */
+    border-bottom: 2px solid #e0e0e0 !important; /* Light gray bottom border */
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1) !important; /* Subtle shadow */
+    padding: 10px 20px !important; /* Padding around the navbar */
 }
 
-/* Ensure navbar items are easily readable */
-.nav-link {
-    color: #333; /* Change link color for contrast */
+/* Align navbar items to the left */
+.navbar-nav {
+    flex-direction: row !important; /* Horizontal layout for nav items */
+    margin-left: 0 !important; /* Remove left margin */
+    margin-right: auto !important; /* Push items to the left */
 }
 
-/* Optional: Change link color on hover */
-.nav-link:hover {
-    color: #007bff; /* Bootstrap primary color for hover effect */
+/* Styling for nav links */
+.navbar-nav .nav-link {
+    color: #333 !important; /* Text color */
+    font-weight: 500 !important; /* Font weight */
+    padding: 10px 20px !important; /* Padding for each nav item */
+    text-transform: uppercase !important; /* Uppercase text */
+    transition: color 0.3s ease-in-out, background-color 0.3s ease-in-out !important; /* Transition effects */
+}
+
+/* Add spacing between nav items */
+.navbar-nav .nav-item {
+    margin-right: 20px !important; /* Right margin for spacing */
+}
+
+/* Hover effect for nav links */
+.navbar-nav .nav-link:hover {
+    color: #afc83b !important; /* Change color on hover */
+    background-color: #f8f9fa !important; /* Light gray background on hover */
+    border-radius: 5px !important; /* Rounded corners on hover */
+}
+
+/* Style for the logout button */
+.navbar-nav.logout-nav {
+    margin-left: auto !important; /* Push logout button to the right */
+}
+
+.navbar-nav .logout-button {
+    padding: 10px 25px !important; /* Padding for logout button */
+    background-color: #ff4d4d !important; /* Red background for logout */
+    color: white !important; /* White text for logout button */
+    border-radius: 5px !important; /* Rounded corners */
+    transition: background-color 0.3s ease-in-out !important; /* Transition for background color */
+}
+
+/* Hover effect for logout button */
+.navbar-nav .logout-button:hover {
+    background-color: #ff3333 !important; /* Darker red on hover */
+}
+
+/* Mobile View Adjustments */
+@media (max-width: 991px) {
+    /* Navbar items stack vertically on mobile */
+    .navbar-nav {
+        flex-direction: column !important; /* Stack items vertically */
+        align-items: flex-start !important; /* Align items to the left */
+    }
+
+    /* Adjust nav link padding and font size for mobile */
+    .navbar-nav .nav-link {
+        padding: 10px 0 !important; /* Vertical padding */
+        font-size: 16px !important; /* Font size */
+    }
+
+    /* Remove right margin for nav items on mobile */
+    .navbar-nav .nav-item {
+        margin-right: 0 !important; /* No right margin */
+        margin-bottom: 10px !important; /* Space between items */
+    }
+
+    /* Center logout button on mobile */
+    .navbar-nav.logout-nav .logout-button {
+        padding: 12px 30px !important; /* Padding for mobile */
+        font-size: 16px !important; /* Font size */
+        margin-top: 10px !important; /* Margin above logout button */
+        width: 100% !important; /* Full width for mobile */
+        text-align: center !important; /* Center text */
+    }
+
+    /* Adjust navbar toggler for mobile */
+    .navbar-toggler {
+        margin-bottom: 15px !important; /* Space below toggler */
+    }
 }

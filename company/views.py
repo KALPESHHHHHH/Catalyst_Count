@@ -150,6 +150,13 @@ def filter_companies(request):
     records = companies.values()  # Fetch all records
 
     return render(request, 'query_builder.html', {'form': form, 'count': count, 'records': records})
+from django.http import JsonResponse
+from django.shortcuts import render, redirect
+import csv
+import io
+from .forms import UploadFileForm
+from .models import CompanyCSVData
+
 def upload_data(request):
     if request.method == 'POST':
         form = UploadFileForm(request.POST, request.FILES)
@@ -162,34 +169,45 @@ def upload_data(request):
 
                 # Prepare a list to store the CompanyCSVData instances to be bulk created
                 company_data_list = []
+                existing_data = []
 
                 for row in reader:
-                    company_data_list.append(
-                        CompanyCSVData(
-                            id=row['id'],  # Explicitly handling the ID field
-                            name=row['name'],
-                            domain=row.get('domain', ''),
-                            year_founded=row.get('year_founded', None),
-                            industry=row.get('industry', ''),
-                            size_range=row.get('size_range', ''),
-                            locality=row.get('locality', ''),
-                            country=row.get('country', ''),
-                            linkedin_url=row.get('linkedin_url', ''),
-                            current_employee_estimate=row.get('current_employee_estimate', None),
-                            total_employee_estimate=row.get('total_employee_estimate', None)
+                    # Check if the record with the same id already exists in the database
+                    if CompanyCSVData.objects.filter(id=row['id']).exists():
+                        existing_data.append(row['id'])
+                    else:
+                        company_data_list.append(
+                            CompanyCSVData(
+                                id=row['id'],  # Explicitly handling the ID field
+                                name=row['name'],
+                                domain=row.get('domain', ''),
+                                year_founded=row.get('year_founded', None),
+                                industry=row.get('industry', ''),
+                                size_range=row.get('size_range', ''),
+                                locality=row.get('locality', ''),
+                                country=row.get('country', ''),
+                                linkedin_url=row.get('linkedin_url', ''),
+                                current_employee_estimate=row.get('current_employee_estimate', None),
+                                total_employee_estimate=row.get('total_employee_estimate', None)
+                            )
                         )
-                    )
+
+                # If no new data is found, return a message and redirect to query_builder.html
+                if not company_data_list:
+                    return JsonResponse({'message': 'File already exists. Redirecting...'}, status=200)
 
                 # Use bulk_create to save all records at once for performance
                 CompanyCSVData.objects.bulk_create(company_data_list)
 
+                # Return success message
                 return JsonResponse({'message': 'File uploaded and data saved successfully!'})
             except Exception as e:
                 return JsonResponse({'message': str(e)}, status=400)
+        else:
+            return JsonResponse({'message': 'Invalid form submission!'}, status=400)
     else:
         form = UploadFileForm()
     return render(request, 'upload_data.html', {'form': form})
-
 from django.db.models import Q
 from rest_framework import generics
 from .models import CompanyCSVData
