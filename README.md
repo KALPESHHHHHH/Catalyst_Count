@@ -68,33 +68,30 @@ The **catalyst-count** application aims to simplify the process of data manageme
      CREATE DATABASE catalyst_count;
      added column names as CSV file 
      ```
+## Model Creation
 
-2. **Model Creation:**
-   - I created a model to handle the uploaded CSV data, `CompanyCSVData`, which corresponds to the structure of the dataset. This model includes fields such as company name, employee count, and other relevant attributes.
-   
-   ```python
-   from django.db import models
+In the Company Count application, a model named `CompanyCSVData` was created to handle the uploaded CSV data. This model corresponds to the structure of the dataset and includes fields that represent relevant attributes of the company data.
 
+### CompanyCSVData Model
 
-class CompanyCSVData(models.Model):
-    id = models.IntegerField(primary_key=True)  # Keep this if you want to manage IDs manually
-    name = models.CharField(max_length=255)
-    domain = models.CharField(max_length=255, blank=True, null=True)
-    year_founded = models.IntegerField(blank=True, null=True)
-    industry = models.CharField(max_length=255, blank=True, null=True)
-    size_range = models.CharField(max_length=255, blank=True, null=True)
-    locality = models.CharField(max_length=255, blank=True, null=True)
-    country = models.CharField(max_length=255, blank=True, null=True)
-    linkedin_url = models.URLField(blank=True, null=True)
-    current_employee_estimate = models.IntegerField(blank=True, null=True)
-    total_employee_estimate = models.IntegerField(blank=True, null=True)
+The `CompanyCSVData` model includes the following fields:
 
-    class Meta:
-        db_table = 'company_csv_data'  # Name of the table
+- **id**: IntegerField (primary key) - A unique identifier for each record. This is kept to manage IDs manually.
+- **name**: CharField - The name of the company.
+- **domain**: CharField (optional) - The company's website domain.
+- **year_founded**: IntegerField (optional) - The year the company was founded.
+- **industry**: CharField (optional) - The industry in which the company operates.
+- **size_range**: CharField (optional) - The size range of the company.
+- **locality**: CharField (optional) - The locality of the company.
+- **country**: CharField (optional) - The country where the company is located.
+- **linkedin_url**: URLField (optional) - A link to the company’s LinkedIn profile.
+- **current_employee_estimate**: IntegerField (optional) - An estimate of the current number of employees.
+- **total_employee_estimate**: IntegerField (optional) - An estimate of the total number of employees.
 
-    def __str__(self):
-        return self.name
+Here is the implementation of the `CompanyCSVData` model:
 
+```python
+from django.db import models
 
 class CompanyCSVData(models.Model):
     id = models.IntegerField(primary_key=True)  # Keep this if you want to manage IDs manually
@@ -114,3 +111,36 @@ class CompanyCSVData(models.Model):
 
     def __str__(self):
         return self.name
+
+
+## Database Migrations (Windows)
+
+Django uses migrations to manage database schema changes. This section outlines how to create, apply, and manage migrations in the Company Count Application on a Windows environment.
+
+### Creating Migrations
+
+Whenever you make changes to your models (e.g., adding a field, changing a data type, etc.), you need to create a migration to reflect those changes in the database. To create migrations, run the following command in your terminal (Command Prompt or PowerShell):
+
+```bash
+python manage.py makemigrations
+python manage.py migrate 
+python manage.py showmigrations 
+
+## Docker Setup
+
+This section provides instructions for building and running the Docker image for the Company Count Application. Docker allows you to package your application with all its dependencies, ensuring consistent environments across different machines.
+
+### Prerequisites
+
+Before proceeding, ensure you have the following installed on your system:
+
+- [Docker](https://www.docker.com/products/docker-desktop) (make sure Docker Desktop is running)
+- [Docker Compose](https://docs.docker.com/compose/)
+
+### Building the Docker Image
+
+1. **Navigate to the Project Directory**:
+   Open your terminal (Command Prompt or PowerShell) and navigate to the root directory of your Django project:
+
+   ```bash
+   cd C:\Projects\Ennobridge\Count_App\catalyst_count
