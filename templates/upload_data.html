@@ -2,198 +2,198 @@
 {% include 'navbar.html' %}
 <!DOCTYPE html>
 <html lang="en">
-   
 <head>
-
     <meta charset="UTF-8">
     <title>Data Upload</title>
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
-   
     <link rel="stylesheet" href="{% static 'css/upload.css' %}">
     <script src="https://code.jquery.com/jquery-3.5.1.min.js"></script>
- <style>
-    * {
-        margin-top: 0 !important;
-        padding-top: 0 !important;
-    }
-    
-    body {
-        margin-top: 110px !important;
-        font-family: 'Arial', sans-serif !important;
-        background-color: #f4f4f4 !important;
-        margin: 0 !important;
-        color: #333 !important;
-    }
-    
-    h1 {
-        color: #4CAF50 !important;
-        text-align: center !important;
-        margin-bottom: 20px !important;
-        animation: fadeIn 1s !important;
-    }
-    
-    #upload-form {
-        background-color: #fff !important;
-        padding: 20px !important;
-        border-radius: 10px !important;
-        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1) !important;
-        max-width: 500px !important;
-        margin: auto !important;
-        animation: slideIn 0.5s !important;
-        transition: box-shadow 0.3s !important;
-    }
-    
-    #upload-form:hover {
-        box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2) !important;
-    }
-    
-    progress {
-        width: 100% !important;
-        height: 20px !important;
-        border-radius: 5px !important;
-        margin-top: 10px !important;
-        display: none !important;
-        background-color: #e0e0e0 !important;
-        animation: progressAnim 2s ease-in-out !important;
-    }
-    
-    #status {
-        margin-top: 10px !important;
-        font-weight: bold !important;
-        text-align: center !important;
-        animation: fadeIn 0.5s !important;
-    }
-    
-    #error-messages {
-        color: red !important;
-        margin-top: 10px !important;
-        text-align: center !important;
-    }
-    
-    button {
-        background-color: #4CAF50 !important;
-        color: white !important;
-        padding: 10px 15px !important;
-        border: none !important;
-        border-radius: 5px !important;
-        cursor: pointer !important;
-        font-size: 16px !important;
-        transition: background-color 0.3s !important, transform 0.3s !important;
-        width: 100% !important;
-        margin-top: 10px !important;
-    }
-    
-    button:hover {
-        background-color: #45a049 !important;
-        transform: scale(1.05) !important;
-    }
-    
-    input[type="file"] {
-        margin-top: 10px !important;
-        display: block !important;
-        width: 100% !important;
-        padding: 10px !important;
-        border: 1px solid #ccc !important;
-        border-radius: 5px !important;
-        font-size: 16px !important;
-        transition: border-color 0.3s !important;
-    }
-    
-    input[type="file"]:focus {
-        border-color: #4CAF50 !important;
-        outline: none !important;
-    }
-    
-    @keyframes fadeIn {
-        from {
-            opacity: 0 !important;
+    <style>
+        * {
+            margin-top: 0 !important;
+            padding-top: 0 !important;
         }
-        to {
-            opacity: 1 !important;
-        }
-    }
-    
-    @keyframes slideIn {
-        from {
-            transform: translateY(-20px) !important;
-            opacity: 0 !important;
-        }
-        to {
-            transform: translateY(0) !important;
-            opacity: 1 !important;
-        }
-    }
-    
-    @keyframes progressAnim {
-        from {
-            width: 0 !important;
-        }
-        to {
-            width: 100% !important;
-        }
-    }
-    
-    @media (max-width: 600px) {
+
         body {
-            padding: 10px !important;
+            margin-top: 110px !important;
+            font-family: 'Arial', sans-serif !important;
+            background-color: #f4f4f4 !important;
+            margin: 0 !important;
+            color: #333 !important;
         }
-    
+
         h1 {
-            font-size: 24px !important;
+            color: #4CAF50 !important;
+            text-align: center !important;
+            margin-bottom: 20px !important;
+            animation: fadeIn 1s !important;
         }
-    
+
         #upload-form {
-            padding: 15px !important;
+            background-color: #fff !important;
+            padding: 20px !important;
+            border-radius: 10px !important;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1) !important;
+            max-width: 500px !important;
+            margin: auto !important;
+            animation: slideIn 0.5s !important;
+            transition: box-shadow 0.3s !important;
         }
-    
-        button {
-            font-size: 14px !important;
-            padding: 8px 10px !important;
+
+        #upload-form:hover {
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2) !important;
         }
-    
-        input[type="file"] {
-            font-size: 14px !important;
-        }
-    
+
         progress {
-            height: 15px !important;
+            width: 100% !important;
+            height: 20px !important;
+            border-radius: 5px !important;
+            margin-top: 10px !important;
+            display: none !important;
+            background-color: #e0e0e0 !important;
         }
-    
+
         #status {
-            font-size: 14px !important;
+            margin-top: 10px !important;
+            font-weight: bold !important;
+            text-align: center !important;
+            animation: fadeIn 0.5s !important;
         }
-    
+
         #error-messages {
-            font-size: 14px !important;
+            color: red !important;
+            margin-top: 10px !important;
+            text-align: center !important;
         }
-    }
-</style>    
+
+        button {
+            background-color: #4CAF50 !important;
+            color: white !important;
+            padding: 10px 15px !important;
+            border: none !important;
+            border-radius: 5px !important;
+            cursor: pointer !important;
+            font-size: 16px !important;
+            transition: background-color 0.3s !important, transform 0.3s !important;
+            width: 100% !important;
+            margin-top: 10px !important;
+        }
+
+        button:hover {
+            background-color: #45a049 !important;
+            transform: scale(1.05) !important;
+        }
+
+        input[type="file"] {
+            margin-top: 10px !important;
+            display: block !important;
+            width: 100% !important;
+            padding: 10px !important;
+            border: 1px solid #ccc !important;
+            border-radius: 5px !important;
+            font-size: 16px !important;
+            transition: border-color 0.3s !important;
+        }
+
+        input[type="file"]:focus {
+            border-color: #4CAF50 !important;
+            outline: none !important;
+        }
+
+        @keyframes fadeIn {
+            from {
+                opacity: 0 !important;
+            }
+            to {
+                opacity: 1 !important;
+            }
+        }
+
+        @keyframes slideIn {
+            from {
+                transform: translateY(-20px) !important;
+                opacity: 0 !important;
+            }
+            to {
+                transform: translateY(0) !important;
+                opacity: 1 !important;
+            }
+        }
+
+        @media (max-width: 600px) {
+            body {
+                padding: 10px !important;
+            }
+
+            h1 {
+                font-size: 24px !important;
+            }
+
+            #upload-form {
+                padding: 15px !important;
+            }
+
+            button {
+                font-size: 14px !important;
+                padding: 8px 10px !important;
+            }
+
+            input[type="file"] {
+                font-size: 14px !important;
+            }
+
+            progress {
+                height: 15px !important;
+            }
+
+            #status {
+                font-size: 14px !important;
+            }
+
+            #error-messages {
+                font-size: 14px !important;
+            }
+        }
+    </style>
 </head>
 <body>
     <h1>Upload a CSV File</h1>
     <form id="upload-form" method="post" enctype="multipart/form-data">
         {% csrf_token %}
-        {{ form.as_p }} <!-- Renders the form fields dynamically -->
+        {{ form.as_p }}
         <button type="submit">Upload</button>
     </form>
-    <progress id="upload-progress" value="0" max="100"></progress>
+    
+    <!-- Loading indicator message -->
+    <div id="loading-indicator" style="display: none; margin-top: 10px; color: green;">Uploading, please wait...</div>
+    
+    <!-- Progress bar for uploading status -->
+    <div style="width: 100%; background-color: lightgrey; border-radius: 5px; margin-top: 10px; display: none;">
+        <div id="upload-progress" style="width: 0%; height: 20px; background-color: green; border-radius: 5px;"></div>
+    </div>
+    
     <div id="status"></div>
     <div id="error-messages"></div>
+    
     <script>
         $(document).ready(function() {
             $('#upload-form').on('submit', function(e) {
-                e.preventDefault(); // Prevent the default form submission
+                e.preventDefault();
                 var formData = new FormData(this);
-                var progressBar = $('#upload-progress');
-                progressBar.show(); // Show the progress bar
-    
+                var progressBarContainer = $('#upload-progress').parent();
+                var loadingIndicator = $('#loading-indicator');
+                progressBarContainer.show(); 
+                loadingIndicator.show(); 
+                $('#upload-progress').css('width', '0%'); 
+                $('#status').text(''); 
+
                 $.ajax({
                     xhr: function() {
                         var xhr = new window.XMLHttpRequest();
                         xhr.upload.addEventListener("progress", function(evt) {
                             if (evt.lengthComputable) {
                                 var percentComplete = (evt.loaded / evt.total) * 100;
-                                progressBar.val(percentComplete); // Update progress bar
+                                $('#upload-progress').css('width', percentComplete + '%'); 
                             }
                         }, false);
                         return xhr;
@@ -204,25 +204,24 @@
                     contentType: false,
                     processData: false,
                     success: function(data) {
-                        // Show success message
-                        $('#status').text(data.message).css('color', 'green');
-                        $('#error-messages').empty(); // Clear any previous error messages
-    
-                        // Redirect to 'query_builder.html' after successful upload
-                        window.location.href = "{% url 'filter_companies' %}"; // Assuming 'query_builder' is the Django URL name
+                        $('#upload-progress').css('width', '100%'); 
+                        $('#status').text('File uploaded successfully!').css('color', 'green');
+                        $('#error-messages').empty(); 
+                      
+                        setTimeout(function() {
+                            window.location.href = "{% url 'filter_companies' %}";
+                        }, 2000);
                     },
                     error: function(xhr) {
                         var errorMessage = xhr.responseJSON ? xhr.responseJSON.message : 'Upload failed.';
                         $('#status').text(errorMessage).css('color', 'red');
                     },
                     complete: function() {
-                        // Hide progress bar after completion
-                        progressBar.hide();
+                       
+                        loadingIndicator.hide();
                     }
                 });
             });
         });
     </script>
-    
 </body>
-</html>

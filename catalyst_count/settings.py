@@ -27,25 +27,15 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
-import environ
-
-# Initialize environment variables
-env = environ.Env()
-environ.Env.read_env()  # This loads the .env file
-
-# Use environment variables in your settings
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.postgresql',
-        'NAME': env('POSTGRES_DB'),
-        'USER': env('POSTGRES_USER'),
-        'PASSWORD': env('POSTGRES_PASSWORD'),
-        'HOST': env('POSTGRES_HOST'),
-        'PORT': env('POSTGRES_PORT'),
-    }
-}
 
 CORS_ALLOW_ALL_ORIGINS = True  # or specify allowed origins
+
+
+
+# settings.py
+CSRF_COOKIE_SECURE = False  # Set to True if using HTTPS
+CSRF_COOKIE_HTTPONLY = False
+CSRF_COOKIE_SAMESITE = 'Lax'  # or 'Strict', depending on your needs
 
 
 
@@ -69,18 +59,18 @@ INSTALLED_APPS = [
     'rest_framework',  
     'django_celery_results', 
 ]
-
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
-    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
-    'allauth.account.middleware.AccountMiddleware',  
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+    # Add the following line:
+    'allauth.account.middleware.AccountMiddleware',
 ]
+
 
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -104,42 +94,49 @@ WSGI_APPLICATION = 'catalyst_count.wsgi.application'
 
 
 
-# Database
-# https://docs.djangoproject.com/en/5.1/ref/settings/#databases
-BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+import os
 import environ
 
+# Initialize environment variables
 env = environ.Env()
-environ.Env.read_env()  
 
+# Read the environment variables from the .env file (if present)
+environ.Env.read_env(os.path.join(os.path.dirname(__file__), '..', '.env'))
+
+# Check if you're running in Docker
+IS_DOCKER = env.bool('RUNNING_IN_DOCKER', default=False)
+
+# Database settings
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
-        'NAME': env('POSTGRES_DB'),
-        'USER': env('POSTGRES_USER'),
-        'PASSWORD': env('POSTGRES_PASSWORD'),
-        'HOST': env('POSTGRES_HOST'),
-        'PORT': env('POSTGRES_PORT'),
+        'NAME': env('POSTGRES_DB', default='catalyst_count_db'),
+        'USER': env('POSTGRES_USER', default='catalyst_user'),
+        'PASSWORD': env('POSTGRES_PASSWORD', default='catalyst_pass'),
+        'HOST': 'db' if IS_DOCKER else 'localhost',
+        'PORT': env('POSTGRES_PORT', default='5432'),
     }
 }
-
-
 
 # Authentication
 AUTHENTICATION_BACKENDS = [
     'django.contrib.auth.backends.ModelBackend',
     'allauth.account.auth_backends.AuthenticationBackend',
 ]
-
 import os
 
-
+# Assuming BASE_DIR is already defined above this code
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 STATIC_URL = '/static/'
+
+# Directory where static files will be collected
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+
+# Directories where Django will also look for static files
 STATICFILES_DIRS = [
     os.path.join(BASE_DIR, 'static'),
 ]
-
 
 # Celery settings for background processing
 CELERY_BROKER_URL = 'redis://localhost:6379/0'
@@ -193,18 +190,18 @@ EMAIL_PORT = 587
 EMAIL_USE_TLS = True
 EMAIL_HOST_USER = 'kiljekalpesh1999@gmail.com'  # Your Gmail address
 EMAIL_HOST_PASSWORD = 'kuey pasb iglq ripf'  # Your app password
-
-# Authentication backends for Django Allauth
 AUTHENTICATION_BACKENDS = (
-    'django.contrib.auth.backends.ModelBackend',  # Default backend
-    'allauth.account.auth_backends.AuthenticationBackend',  # Allauth backend
+    'django.contrib.auth.backends.ModelBackend',
+    'allauth.account.auth_backends.AuthenticationBackend',
 )
 
-# Allauth configuration
-LOGIN_REDIRECT_URL = 'navbar'  # URL to redirect after successful login
-LOGOUT_REDIRECT_URL = 'logout_page'  # Redirect to your custom logout page
-ACCOUNT_LOGOUT_ON_GET = True  # Logout user on GET request to /account/logout/
+SITE_ID = 1 
 
+
+# Allauth configuration
+LOGIN_REDIRECT_URL = 'home' 
+LOGOUT_REDIRECT_URL = 'logout_page' 
+ACCOUNT_LOGOUT_ON_GET = True  
 # Email verification and requirements
 ACCOUNT_EMAIL_REQUIRED = True
 ACCOUNT_EMAIL_VERIFICATION = 'none'  # Change to 'mandatory' if you want email verification
@@ -214,22 +211,26 @@ ACCOUNT_AUTHENTICATED_LOGIN_REDIRECTS = True  # Redirect authenticated users
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 ROOT_URLCONF = 'catalyst_count.urls'  # URL configuration for the project
 
+# settings.py
 
 # Allow large file uploads
-DATA_UPLOAD_MAX_MEMORY_SIZE = 1048576000  # 1GB in bytes
+DATA_UPLOAD_MAX_MEMORY_SIZE = 1048576000 
+FILE_UPLOAD_MAX_MEMORY_SIZE = 1048576000  
+
+# File upload handlers
 FILE_UPLOAD_HANDLERS = [
-    'django.core.files.uploadhandler.MemoryFileUploadHandler',
     'django.core.files.uploadhandler.TemporaryFileUploadHandler',
+   
 ]
 # settings.py
-CELERY_BROKER_URL = 'redis://localhost:6379/0'  # for Redis
-# or
-CELERY_BROKER_URL = 'amqp://localhost'  # for RabbitMQ
 
-
-DATA_UPLOAD_MAX_MEMORY_SIZE = 1048576000  # 1GB in bytes
-FILE_UPLOAD_MAX_MEMORY_SIZE = 1048576000  # 1GB in bytes
-
+# Celery Configuration Options
+CELERY_BROKER_URL = 'amqp://guest:guest@localhost//'
+CELERY_RESULT_BACKEND = 'django-db'  # You can also use 'rpc://' or other backends if needed.
+CELERY_ACCEPT_CONTENT = ['json']
+CELERY_TASK_SERIALIZER = 'json'
+CELERY_RESULT_SERIALIZER = 'json'
+CELERY_TIMEZONE = 'UTC'  # Adjust to your preferred timezone
 
 # settings.py
 

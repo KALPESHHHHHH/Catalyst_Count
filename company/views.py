@@ -14,11 +14,14 @@ from .serializers import CompanyDataSerializer
 from django.contrib import messages
 from django.views import View
 from io import StringIO
+from celery import shared_task
+import time
 from allauth.account.views import PasswordResetView
 from .tasks import process_csv
 from .forms import CompanyFilterForm 
 from django.db import IntegrityError
 import logging
+from django.core.exceptions import ObjectDoesNotExist
 from django.db.models import Q
 import csv
 from rest_framework import generics
@@ -43,18 +46,36 @@ def register(request):
         form = UserCreationForm()
     return render(request, 'account/register.html', {'form': form})
 
-# User login view
 def user_login(request):
     if request.method == 'POST':
-        username = request.POST['username']
+        login_field = request.POST['login']  # Use the login field
         password = request.POST['password']
-        user = authenticate(request, username=username, password=password)
-        if user:
-            login(request, user)
-            return redirect('query_builder')
+        
+        # Attempt to authenticate with username first
+        user = authenticate(request, username=login_field, password=password)
+        
+        # If authentication fails, check by email
+        if user is None:
+            try:
+                user = User.objects.get(email=login_field)  # Attempt to get user by email
+                if user.check_password(password):  # Verify the password
+                    login(request, user)  # Log the user in
+                else:
+                    user = None  # Reset user if password check fails
+            except User.DoesNotExist:
+                user = None  # Reset user if not found by email
+
+        # Redirect based on the result of authentication
+        if user is not None:
+            login(request, user)  # Log the user in
+            return redirect('home')  # Redirect to the home page
         else:
-            messages.error(request, 'Invalid credentials')
-    return render(request, 'account/login.html')
+            messages.error(request, 'Invalid credentials')  # Show error message if login fails
+    
+    return render(request, 'account/login.html')  # Render the login template# Home page view
+@login_required
+def home(request):
+    return render(request, 'home.html')  # Create a template for the home page
 
 # Logout view
 @login_required
@@ -108,6 +129,13 @@ def remove_user(request):
             return JsonResponse({'message': 'User not found'}, status=404)
     return JsonResponse({'message': 'Invalid request'}, status=400)
 
+
+
+
+
+
+
+
 @login_required
 def filter_companies(request):
     form = CompanyFilterForm(request.GET or None)
@@ -129,8 +157,16 @@ def filter_companies(request):
             filters &= Q(name__exact=name)  # Use exact match
         if domain:
             filters &= Q(domain__exact=domain)  # Use exact match
+
+        # Handling for year_founded to match a single year
         if year_founded is not None:
-            filters &= Q(year_founded=year_founded)  # Match directly
+            try:
+                # Attempt to convert the year_founded to an integer
+                year_founded = int(year_founded)
+                filters &= Q(year_founded=year_founded)  # Match directly
+            except ValueError:
+                pass  # If year_founded is not a valid year, skip this filter
+
         if industry:
             filters &= Q(industry__exact=industry)  # Use exact match
         if size_range:
@@ -150,12 +186,13 @@ def filter_companies(request):
     records = companies.values()  # Fetch all records
 
     return render(request, 'query_builder.html', {'form': form, 'count': count, 'records': records})
-from django.http import JsonResponse
-from django.shortcuts import render, redirect
-import csv
-import io
-from .forms import UploadFileForm
-from .models import CompanyCSVData
+
+
+
+
+
+
+logger = logging.getLogger(__name__)
 
 def upload_data(request):
     if request.method == 'POST':
@@ -208,22 +245,15 @@ def upload_data(request):
     else:
         form = UploadFileForm()
     return render(request, 'upload_data.html', {'form': form})
-from django.db.models import Q
-from rest_framework import generics
-from .models import CompanyCSVData
-from .serializers import CompanyDataSerializer
-
-# DRF API View for Company Data
 class CompanyListCreateView(generics.ListCreateAPIView):
     queryset = CompanyCSVData.objects.all()
     serializer_class = CompanyDataSerializer
 
     def get_queryset(self):
         queryset = super().get_queryset()
-        # Initialize an empty Q object for complex queries
-        filters = Q()
+        filters = Q()  # Initialize an empty Q object for complex queries
 
-        # Apply filtering based on request parameters
+        # Get filtering parameters from the request
         name = self.request.query_params.get('name')
         domain = self.request.query_params.get('domain')
         year_founded = self.request.query_params.get('year_founded')
@@ -232,21 +262,47 @@ class CompanyListCreateView(generics.ListCreateAPIView):
         locality = self.request.query_params.get('locality')
         country = self.request.query_params.get('country')
 
-        # Build the filters dynamically
+        # Apply name filter
         if name:
-            filters &= Q(name__exact=name)  # Use exact match
+            filters &= Q(name__iexact=name)  # Case-insensitive exact match
+
+        # Apply domain filter
         if domain:
-            filters &= Q(domain__exact=domain)  # Use exact match
+            filters &= Q(domain__iexact=domain)
+
+        # Updated logic for `year_founded` to handle both exact year and range
         if year_founded:
-            filters &= Q(year_founded=year_founded)  # Match directly
+            year_founded = year_founded.strip()  # Remove any extra spaces
+            if '-' in year_founded:
+                # If year_founded contains a range (e.g., "2000-2010")
+                try:
+                    start_year, end_year = map(int, year_founded.split('-'))
+                    filters &= Q(year_founded__gte=start_year, year_founded__lte=end_year)
+                except ValueError:
+                    pass  # Skip if the year range is invalid
+            else:
+                # If it's a single year
+                try:
+                    year = int(year_founded)
+                    filters &= Q(year_founded=year)
+                except ValueError:
+                    pass  # Skip if the year is invalid
+
+        # Apply industry filter
         if industry:
-            filters &= Q(industry__exact=industry)  # Use exact match
+            filters &= Q(industry__iexact=industry)
+
+        # Apply size_range filter
         if size_range:
-            filters &= Q(size_range__exact=size_range)  # Use exact match
+            filters &= Q(size_range__iexact=size_range)
+
+        # Apply locality filter
         if locality:
-            filters &= Q(locality__exact=locality)  # Use exact match
+            filters &= Q(locality__iexact=locality)
+
+        # Apply country filter
         if country:
-            filters &= Q(country__exact=country)  # Use exact match
+            filters &= Q(country__iexact=country)
 
         # Apply the filters to the queryset
         if filters:

@@ -1,14 +1,169 @@
+{% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}Company Count App{% endblock %}</title>
+    <title>{% block title %}Company Count Application{% endblock %}</title>
     <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
+    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+    <style>
+        body {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            background-color: #f9f9f9;
+            margin: 0;
+            font-family: Arial, sans-serif;
+        }
+
+        .container {
+            text-align: center;
+            padding: 40px;
+            max-width: 800px;
+            background-color: #fff;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            border-radius: 8px;
+            transition: transform 0.5s ease;
+        }
+
+        .welcome-message {
+            font-size: 2.5em;
+            color: #0056b3;
+            margin-bottom: 20px;
+            opacity: 0;
+            transform: translateY(-50px);
+            transition: opacity 0.5s ease, transform 0.5s ease;
+        }
+
+        .info-section {
+            margin: 30px 0;
+            opacity: 0;
+            transform: translateY(50px);
+            transition: opacity 0.5s ease, transform 0.5s ease;
+            will-change: transform, opacity;
+        }
+
+        .proceed-button {
+            padding: 15px 30px;
+            font-size: 1.2em;
+            background-color: #007bff;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.3s;
+            margin-top: 40px;
+            animation: bounceIn 1s ease-in-out;
+        }
+
+        .proceed-button:hover {
+            background-color: #0056b3;
+            transform: scale(1.05);
+        }
+
+        @keyframes bounceIn {
+            from {
+                transform: scale(0.8);
+                opacity: 0;
+            }
+            to {
+                transform: scale(1);
+                opacity: 1;
+            }
+        }
+
+        .feature-item {
+            margin: 15px 0;
+            padding: 15px;
+            background: rgba(0, 123, 255, 0.1);
+            border-left: 5px solid #007bff;
+            border-radius: 4px;
+            transition: transform 0.3s;
+        }
+
+        .feature-item:hover {
+            transform: translateX(5px);
+        }
+
+        @media (max-width: 768px) {
+            .welcome-message {
+                font-size: 2em;
+            }
+
+            .proceed-button {
+                font-size: 1em;
+                padding: 10px 20px;
+            }
+        }
+    </style>
 </head>
 <body>
     <div class="container">
-        {% block content %}{% endblock %}
+        <h1 class="welcome-message">Welcome to Company Count Application</h1>
+        
+        <div class="info-section" id="section1">
+            <h2>About This Application</h2>
+            <div class="feature-item">
+                <p>This application allows you to manage company data effectively. Upload large CSV files and filter through the data using various criteria.</p>
+            </div>
+            <div class="feature-item">
+                <p>With real-time updates and a user-friendly interface, you can easily access the insights you need.</p>
+            </div>
+        </div>
+
+        <div class="info-section" id="section2">
+            <h2>Key Features</h2>
+            <div class="feature-item">
+                <p>User Authentication: Secure login and registration for data privacy.</p>
+            </div>
+            <div class="feature-item">
+                <p>CSV File Upload: Seamlessly upload large files (up to 1GB) with progress feedback.</p>
+            </div>
+            <div class="feature-item">
+                <p>Dynamic Query Builder: Apply filters to analyze and count records quickly.</p>
+            </div>
+            <div class="feature-item">
+                <p>API Integration: Use REST APIs for querying and managing your data efficiently.</p>
+            </div>
+            <div class="feature-item">
+                <p>Responsive Design: Accessible on any device, ensuring usability on-the-go.</p>
+            </div>
+        </div>
+
+        <div class="info-section" id="section3">
+            <h2>Get Started</h2>
+            <div class="feature-item">
+                <p>To begin using the Company Count Application, please log in or register a new account. Once you're logged in, you can upload your CSV files and start filtering through the data!</p>
+            </div>
+        </div>
+
+        <button class="proceed-button" onclick="redirectToNavbar()">Proceed</button>
     </div>
+
+    <script>
+        function redirectToNavbar() {
+            window.location.href = "{% url 'navbar' %}";
+        }
+
+        // Function to handle scroll animations
+        function handleScroll() {
+            const sections = document.querySelectorAll('.info-section, .welcome-message');
+            const windowHeight = window.innerHeight;
+
+            sections.forEach(section => {
+                const sectionTop = section.getBoundingClientRect().top;
+
+                if (sectionTop < windowHeight * 0.8) {
+                    section.style.opacity = 1;
+                    section.style.transform = 'translateY(0)'; // Reset to original position
+                }
+            });
+        }
+
+        window.addEventListener('scroll', handleScroll);
+        window.addEventListener('load', handleScroll); // Trigger on initial load
+    </script>
 </body>
 </html>

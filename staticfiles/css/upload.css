@@ -1,0 +1,153 @@
+* {
+    margin-top: 0 !important;
+    padding-top: 0 !important;
+}
+
+body {
+    font-family: 'Arial', sans-serif !important;
+    background-color: #f4f4f4 !important;
+    margin: 0 !important;
+    color: #333 !important;
+}
+
+h1 {
+    color: #4CAF50 !important;
+    text-align: center !important;
+    margin-bottom: 20px !important;
+    animation: fadeIn 1s !important;
+}
+
+#upload-form {
+    background-color: #fff !important;
+    padding: 20px !important;
+    border-radius: 10px !important;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1) !important;
+    max-width: 500px !important;
+    margin: auto !important;
+    animation: slideIn 0.5s !important;
+    transition: box-shadow 0.3s !important;
+}
+
+#upload-form:hover {
+    box-shadow: 0 8px 30px rgba(0, 0, 0, 0.2) !important;
+}
+
+progress {
+    width: 100% !important;
+    height: 20px !important;
+    border-radius: 5px !important;
+    margin-top: 10px !important;
+    display: none !important;
+    background-color: #e0e0e0 !important;
+    animation: progressAnim 2s ease-in-out !important;
+}
+
+#status {
+    margin-top: 10px !important;
+    font-weight: bold !important;
+    text-align: center !important;
+    animation: fadeIn 0.5s !important;
+}
+
+#error-messages {
+    color: red !important;
+    margin-top: 10px !important;
+    text-align: center !important;
+}
+
+button {
+    background-color: #4CAF50 !important;
+    color: white !important;
+    padding: 10px 15px !important;
+    border: none !important;
+    border-radius: 5px !important;
+    cursor: pointer !important;
+    font-size: 16px !important;
+    width: 100% !important;
+    margin-top: 10px !important;
+}
+
+button:hover {
+    background-color: #45a049 !important;
+    transform: scale(1.05) !important;
+}
+
+input[type="file"] {
+    margin-top: 10px !important;
+    display: block !important;
+    width: 100% !important;
+    padding: 10px !important;
+    border: 1px solid #ccc !important;
+    border-radius: 5px !important;
+    font-size: 16px !important;
+    transition: border-color 0.3s !important;
+}
+
+input[type="file"]:focus {
+    border-color: #4CAF50 !important;
+    outline: none !important;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0 !important;
+    }
+    to {
+        opacity: 1 !important;
+    }
+}
+
+@keyframes slideIn {
+    from {
+        transform: translateY(-20px) !important;
+        opacity: 0 !important;
+    }
+    to {
+        transform: translateY(0) !important;
+        opacity: 1 !important;
+    }
+}
+
+@keyframes progressAnim {
+    from {
+        width: 0 !important;
+    }
+    to {
+        width: 100% !important;
+    }
+}
+
+@media (max-width: 600px) {
+    body {
+        padding: 10px !important;
+    }
+
+    h1 {
+        font-size: 24px !important;
+    }
+
+    #upload-form {
+        padding: 15px !important;
+    }
+
+    button {
+        font-size: 14px !important;
+        padding: 8px 10px !important;
+    }
+
+    input[type="file"] {
+        font-size: 14px !important;
+    }
+
+    progress {
+        height: 15px !important;
+    }
+
+    #status {
+        font-size: 14px !important;
+    }
+
+    #error-messages {
+        font-size: 14px !important;
+    }
+}
