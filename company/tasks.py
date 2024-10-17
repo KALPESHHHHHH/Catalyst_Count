@@ -21,24 +21,28 @@ def process_csv(file_content, filename):
 
         for index, row in df.iterrows():
             try:
-                if pd.notna(row.get('name')) and pd.notna(row.get('domain')):
-                    # Adjust id handling according to your needs
-                    company = CompanyCSVData.objects.create(
-                        name=row.get('name'),
-                        domain=row.get('domain'),
-                        year_founded=row.get('year_founded'),
-                        industry=row.get('industry'),
-                        size_range=row.get('size_range'),
-                        locality=row.get('locality'),
-                        country=row.get('country'),
-                        linkedin_url=row.get('linkedin_url'),
-                        current_employee_estimate=row.get('current_employee_estimate'),
-                        total_employee_estimate=row.get('total_employee_estimate')
-                    )
+                if pd.notna(row.get('id')) and pd.notna(row.get('name')) and pd.notna(row.get('domain')):
+                    # Prepare data for insertion
+                    company_data = {
+                        'id': int(row['id']),  # Ensure id is converted to an integer
+                        'name': row.get('name'),
+                        'domain': row.get('domain'),
+                        'year_founded': int(row.get('year_founded')),
+                        'industry': row.get('industry'),
+                        'size_range': row.get('size_range'),
+                        'locality': row.get('locality'),
+                        'country': row.get('country'),
+                        'linkedin_url': row.get('linkedin_url'),
+                        'current_employee_estimate': int(row.get('current_employee_estimate')),
+                        'total_employee_estimate': int(row.get('total_employee_estimate'))
+                    }
+
+                    # Create the CompanyCSVData object
+                    company = CompanyCSVData.objects.create(**company_data)
                     success_count += 1
                 else:
                     error_count += 1
-                    error_messages.append(f"Row {index + 1}: 'name' or 'domain' is required.")
+                    error_messages.append(f"Row {index + 1}: 'id', 'name' or 'domain' is required.")
             except IntegrityError as e:
                 error_count += 1
                 error_messages.append(f"Error inserting Row {index + 1}: {str(e)}")

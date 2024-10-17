@@ -9,7 +9,7 @@ class UploadedFile(models.Model):
 
 
 class CompanyCSVData(models.Model):
-    id = models.IntegerField(primary_key=True)  # Keep this if you want to manage IDs manually
+    id = models.BigIntegerField(primary_key=True)   # Keep this if you want to manage IDs manually
     name = models.CharField(max_length=255)
     domain = models.CharField(max_length=255, blank=True, null=True)
     year_founded = models.IntegerField(blank=True, null=True)
