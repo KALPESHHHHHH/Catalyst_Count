@@ -56,9 +56,13 @@ INSTALLED_APPS = [
     'allauth',
     'allauth.account',
     'allauth.socialaccount',
-    'rest_framework',  
+    'rest_framework', 
+    'allauth.socialaccount.providers.google', 
     'django_celery_results', 
 ]
+
+
+WSGI_APPLICATION = 'catalyst_count.wsgi.application'
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -67,8 +71,7 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
-    # Add the following line:
-    'allauth.account.middleware.AccountMiddleware',
+    # No need to add any allauth middleware here.
 ]
 
 
@@ -92,31 +95,29 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'catalyst_count.wsgi.application'
 
-
-
-import os
 import environ
 
-# Initialize environment variables
+# Initialize the environment variables
 env = environ.Env()
+environ.Env.read_env()  # Read the .env file
 
-# Read the environment variables from the .env file (if present)
-environ.Env.read_env(os.path.join(os.path.dirname(__file__), '..', '.env'))
-
-# Check if you're running in Docker
-IS_DOCKER = env.bool('RUNNING_IN_DOCKER', default=False)
+# Set DEBUG
+DEBUG = env('DEBUG', default='True') == 'True'
 
 # Database settings
+IS_DOCKER = env('IS_DOCKER', default='False') == 'True'
+
 DATABASES = {
     'default': {
         'ENGINE': 'django.db.backends.postgresql',
         'NAME': env('POSTGRES_DB', default='catalyst_count_db'),
         'USER': env('POSTGRES_USER', default='catalyst_user'),
         'PASSWORD': env('POSTGRES_PASSWORD', default='catalyst_pass'),
-        'HOST': 'db' if IS_DOCKER else 'localhost',
+        'HOST': 'db' if IS_DOCKER else env('POSTGRES_HOST', default='localhost'),
         'PORT': env('POSTGRES_PORT', default='5432'),
     }
 }
+
 
 # Authentication
 AUTHENTICATION_BACKENDS = [
@@ -124,7 +125,7 @@ AUTHENTICATION_BACKENDS = [
     'allauth.account.auth_backends.AuthenticationBackend',
 ]
 import os
-
+SITE_ID = 1
 # Assuming BASE_DIR is already defined above this code
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -222,15 +223,9 @@ FILE_UPLOAD_HANDLERS = [
     'django.core.files.uploadhandler.TemporaryFileUploadHandler',
    
 ]
-# settings.py
-
-# Celery Configuration Options
 CELERY_BROKER_URL = 'amqp://guest:guest@localhost//'
-CELERY_RESULT_BACKEND = 'django-db'  # You can also use 'rpc://' or other backends if needed.
 CELERY_ACCEPT_CONTENT = ['json']
 CELERY_TASK_SERIALIZER = 'json'
-CELERY_RESULT_SERIALIZER = 'json'
-CELERY_TIMEZONE = 'UTC'  # Adjust to your preferred timezone
 
 # settings.py
 

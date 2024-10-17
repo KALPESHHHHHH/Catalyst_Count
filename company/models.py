@@ -22,7 +22,7 @@ class CompanyCSVData(models.Model):
     total_employee_estimate = models.IntegerField(blank=True, null=True)
 
     class Meta:
-        db_table = 'company_csv_data'  # Name of the table
+        db_table = 'company_csv_data'  # Name of the tablecls
 
     def __str__(self):
         return self.name

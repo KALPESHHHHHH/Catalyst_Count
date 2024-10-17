@@ -28,7 +28,7 @@ from rest_framework import generics
 from .serializers import CompanyDataSerializer
 import pandas as pd
 import io
-from celery import shared_task  # Assuming Celery is used for background processing
+from celery import shared_task 
 from smtplib import SMTPAuthenticationError
 import os
 
@@ -48,34 +48,33 @@ def register(request):
 
 def user_login(request):
     if request.method == 'POST':
-        login_field = request.POST['login']  # Use the login field
+        login_field = request.POST['login']  
         password = request.POST['password']
         
-        # Attempt to authenticate with username first
+    
         user = authenticate(request, username=login_field, password=password)
         
-        # If authentication fails, check by email
+      
         if user is None:
             try:
-                user = User.objects.get(email=login_field)  # Attempt to get user by email
-                if user.check_password(password):  # Verify the password
+                user = User.objects.get(email=login_field)  
+                if user.check_password(password): 
                     login(request, user)  # Log the user in
                 else:
-                    user = None  # Reset user if password check fails
+                    user = None  
             except User.DoesNotExist:
                 user = None  # Reset user if not found by email
 
         # Redirect based on the result of authentication
         if user is not None:
-            login(request, user)  # Log the user in
+            login(request, user) 
             return redirect('home')  # Redirect to the home page
         else:
-            messages.error(request, 'Invalid credentials')  # Show error message if login fails
-    
+            messages.error(request, 'Invalid credentials') 
     return render(request, 'account/login.html')  # Render the login template# Home page view
 @login_required
 def home(request):
-    return render(request, 'home.html')  # Create a template for the home page
+    return render(request, 'home.html') 
 
 # Logout view
 @login_required
@@ -96,7 +95,6 @@ def users(request):
     message = request.GET.get('message', '')
     return render(request, 'users.html', {'users': users, 'message': message})
 
-# Add user view with CSRF protection
 def add_user(request):
     if request.method == 'POST':
         username = request.POST.get('username')
@@ -117,13 +115,13 @@ def add_user(request):
         })
     return JsonResponse({'message': 'Invalid request'}, status=400)
 
-# Remove user view with CSRF protection
+@login_required
 def remove_user(request):
     if request.method == 'POST':
         user_id = request.POST.get('user_id')
         try:
             user = User.objects.get(id=user_id)
-            user.delete()  # This will remove the user from the database
+            user.delete() 
             return JsonResponse({'message': 'User removed successfully!'})
         except User.DoesNotExist:
             return JsonResponse({'message': 'User not found'}, status=404)
@@ -139,9 +137,8 @@ def remove_user(request):
 @login_required
 def filter_companies(request):
     form = CompanyFilterForm(request.GET or None)
-    companies = CompanyCSVData.objects.all()  # Get all companies initially
-    filters = Q()  # Initialize an empty Q object for complex queries
-
+    companies = CompanyCSVData.objects.all()  
+    filters = Q()  
     if form.is_valid():
         # Fetch cleaned data from the form
         name = form.cleaned_data.get('name')
@@ -193,7 +190,7 @@ def filter_companies(request):
 
 
 logger = logging.getLogger(__name__)
-
+@login_required
 def upload_data(request):
     if request.method == 'POST':
         form = UploadFileForm(request.POST, request.FILES)
@@ -245,6 +242,28 @@ def upload_data(request):
     else:
         form = UploadFileForm()
     return render(request, 'upload_data.html', {'form': form})
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 class CompanyListCreateView(generics.ListCreateAPIView):
     queryset = CompanyCSVData.objects.all()
     serializer_class = CompanyDataSerializer

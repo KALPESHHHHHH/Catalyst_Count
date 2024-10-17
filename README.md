@@ -111,21 +111,17 @@ class CompanyCSVData(models.Model):
 
     def __str__(self):
         return self.name
-
-
 ## Database Migrations (Windows)
 
 Django uses migrations to manage database schema changes. This section outlines how to create, apply, and manage migrations in the Company Count Application on a Windows environment.
 
 ### Creating Migrations
 
-Whenever you make changes to your models (e.g., adding a field, changing a data type, etc.), you need to create a migration to reflect those changes in the database. To create migrations, run the following command in your terminal (Command Prompt or PowerShell):
+Whenever you make changes to your models (e.g., adding a field, changing a data type, etc.), you need to create a migration to reflect those changes in the database. To create migrations, run the following commands in your terminal (Command Prompt or PowerShell):
 
-```bash
 python manage.py makemigrations
-python manage.py migrate 
-python manage.py showmigrations 
-
+python manage.py migrate
+python manage.py showmigrations
 ## Docker Setup
 
 This section provides instructions for building and running the Docker image for the Company Count Application. Docker allows you to package your application with all its dependencies, ensuring consistent environments across different machines.
@@ -139,7 +135,7 @@ Before proceeding, ensure you have the following installed on your system:
 
 ### Building the Docker Image
 
-1. **Navigate to the Project Directory**:
+1. **Navigate to the Project Directory**:  
    Open your terminal (Command Prompt or PowerShell) and navigate to the root directory of your Django project:
 
    ```bash

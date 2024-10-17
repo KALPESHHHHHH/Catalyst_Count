@@ -4,99 +4,155 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{% block title %}Company Count Application{% endblock %}</title>
-    <link rel="stylesheet" href="{% static 'css/bootstrap.min.css' %}">
-    <link rel="stylesheet" href="{% static 'css/styles.css' %}">
+    <title>Company Count Application</title>
+    <link rel="stylesheet" href="styles.css"> <!-- Link to your CSS file -->
     <style>
-        body {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            min-height: 100vh;
-            background-color: #f9f9f9;
-            margin: 0;
-            font-family: Arial, sans-serif;
-        }
+  /* Base styles for body and container */
+  body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    margin: 0;
+    padding: 0;
+    color: #333;
+}
 
-        .container {
-            text-align: center;
-            padding: 40px;
-            max-width: 800px;
-            background-color: #fff;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
-            border-radius: 8px;
-            transition: transform 0.5s ease;
-        }
+.container {
+    max-width: 1200px;
+    margin: auto;
+    padding: 20px;
+}
 
-        .welcome-message {
-            font-size: 2.5em;
-            color: #0056b3;
-            margin-bottom: 20px;
-            opacity: 0;
-            transform: translateY(-50px);
-            transition: opacity 0.5s ease, transform 0.5s ease;
-        }
+.welcome-message {
+    text-align: center;
+    font-size: 2.5em;
+    margin-bottom: 20px;
+}
 
-        .info-section {
-            margin: 30px 0;
-            opacity: 0;
-            transform: translateY(50px);
-            transition: opacity 0.5s ease, transform 0.5s ease;
-            will-change: transform, opacity;
-        }
+.info-section {
+    background: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    margin: 20px 0;
+    padding: 20px;
+    animation: fadeIn 1s ease-in-out;
+}
 
-        .proceed-button {
-            padding: 15px 30px;
-            font-size: 1.2em;
-            background-color: #007bff;
-            color: #fff;
-            border: none;
-            border-radius: 5px;
-            cursor: pointer;
-            transition: background-color 0.3s, transform 0.3s;
-            margin-top: 40px;
-            animation: bounceIn 1s ease-in-out;
-        }
+.feature-item {
+    opacity: 0;
+    transform: translateY(20px); 
+    transition: opacity 0.5s ease, transform 0.5s ease;
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+}
 
-        .proceed-button:hover {
-            background-color: #0056b3;
-            transform: scale(1.05);
-        }
+.feature-item.animate-left {
+    opacity: 1;
+    transform: translateY(0); 
+    animation: slideInLeft 0.5s forwards;
+}
 
-        @keyframes bounceIn {
-            from {
-                transform: scale(0.8);
-                opacity: 0;
-            }
-            to {
-                transform: scale(1);
-                opacity: 1;
-            }
-        }
+.feature-item.animate-right {
+    opacity: 1;
+    transform: translateY(0); 
+    animation: slideInRight 0.5s forwards;
+}
 
-        .feature-item {
-            margin: 15px 0;
-            padding: 15px;
-            background: rgba(0, 123, 255, 0.1);
-            border-left: 5px solid #007bff;
-            border-radius: 4px;
-            transition: transform 0.3s;
-        }
+.feature-item img {
+    width: 200px;  /* Increased image size */
+    height: 200px; /* Increased image size */
+    border-radius: 8px;
+    margin: 0 20px;
+    transition: transform 0.3s;
+}
 
-        .feature-item:hover {
-            transform: translateX(5px);
-        }
+.feature-item img:hover {
+    transform: scale(1.05);
+}
 
-        @media (max-width: 768px) {
-            .welcome-message {
-                font-size: 2em;
-            }
+.proceed-button {
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    text-align: center;
+    text-decoration: none;
+    display: block;
+    font-size: 16px;
+    margin: 20px auto;
+    cursor: pointer;
+    border-radius: 5px;
+    transition: background-color 0.3s;
+}
 
-            .proceed-button {
-                font-size: 1em;
-                padding: 10px 20px;
-            }
-        }
+.proceed-button:hover {
+    background-color: #45a049;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes slideInLeft {
+    from {
+        opacity: 0;
+        transform: translateX(-30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes slideInRight {
+    from {
+        opacity: 0;
+        transform: translateX(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@media (max-width: 768px) {
+    .feature-item {
+        flex-direction: column;
+        align-items: flex-start;
+        transform: translateY(0);
+    }
+
+    .feature-item img {
+        margin: 0 0 10px 0;
+    }
+
+    .feature-item.animate-left {
+        animation: slideInUp 0.5s forwards;
+    }
+
+    .feature-item.animate-right {
+        animation: slideInUp 0.5s forwards;
+    }
+}
+
+@keyframes slideInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
     </style>
 </head>
 <body>
@@ -106,64 +162,73 @@
         <div class="info-section" id="section1">
             <h2>About This Application</h2>
             <div class="feature-item">
-                <p>This application allows you to manage company data effectively. Upload large CSV files and filter through the data using various criteria.</p>
+                <img src="{% static 'img/file_upload.png' %}" alt="Data Management" />
+                <p>This application allows you to manage company data effectively. Upload large CSV files and filter through the data using various criteria. With our intuitive interface, navigating through the data becomes seamless. You can effortlessly perform bulk actions and save valuable time. The system supports various data formats, ensuring compatibility with your existing records. We prioritize data security and offer robust features to protect your information. Our application is designed for both individual users and teams, enabling collaboration and streamlined workflows. Join us in transforming the way you manage company data.</p>
             </div>
             <div class="feature-item">
-                <p>With real-time updates and a user-friendly interface, you can easily access the insights you need.</p>
+                <p>With real-time updates and a user-friendly interface, you can easily access the insights you need. The application provides an interactive dashboard that displays key metrics at a glance. Customize your views and focus on what matters most to you. Our analytics tools empower you to generate reports quickly and efficiently. Furthermore, receive notifications on important changes to your data to stay informed. Whether you're in the office or on the go, access your data from any device. Experience the power of data-driven decision-making with our application.</p>
+                <img src="{% static 'img/ui.jpg' %}" alt="User Interface" />
             </div>
         </div>
-
+        
         <div class="info-section" id="section2">
             <h2>Key Features</h2>
             <div class="feature-item">
-                <p>User Authentication: Secure login and registration for data privacy.</p>
+                <img src="{% static 'img/secure_login.jpg' %}" alt="Secure Login" />
+                <p>User Authentication: Secure login and registration for data privacy. Our application employs state-of-the-art encryption methods to ensure that your data remains confidential. We use two-factor authentication to add an extra layer of security. Each user can customize their profile and manage their credentials efficiently. With a robust recovery process, regaining access to your account is straightforward. The system logs all access attempts, providing an additional security measure. Our commitment to security ensures that you can trust our application with your sensitive information.</p>
             </div>
             <div class="feature-item">
-                <p>CSV File Upload: Seamlessly upload large files (up to 1GB) with progress feedback.</p>
+                <p>CSV File Upload: Seamlessly upload large files (up to 1GB) with progress feedback. Our file upload feature supports drag-and-drop functionality for ease of use. Monitor your upload progress in real time to ensure that no data is lost. The application can handle multiple files simultaneously, boosting your productivity. Upon completion, receive instant feedback on the success of your uploads. Detailed error messages are provided for any failed attempts, allowing for quick troubleshooting. We prioritize user experience, ensuring that the uploading process is both efficient and reliable.</p>
+                <img src="{% static 'img/data.jpg' %}" alt="CSV File Upload" />
             </div>
             <div class="feature-item">
-                <p>Dynamic Query Builder: Apply filters to analyze and count records quickly.</p>
+                <img src="{% static 'img/data.jpg' %}" alt="Data Analysis" />
+                <p>Dynamic Query Builder: Apply filters to analyze and count records quickly. Our intuitive query builder allows users to create complex queries without prior coding experience. Choose from various filtering options to tailor your results precisely. Save and reuse your queries for future reference, enhancing your efficiency. The application offers real-time feedback on your queries, ensuring that you understand the data you are analyzing. Export your results easily for presentations or further analysis. Experience the power of data analysis at your fingertips, transforming raw data into actionable insights.</p>
             </div>
             <div class="feature-item">
-                <p>API Integration: Use REST APIs for querying and managing your data efficiently.</p>
-            </div>
-            <div class="feature-item">
-                <p>Responsive Design: Accessible on any device, ensuring usability on-the-go.</p>
+                <p>API Integration: Use REST APIs for querying and managing your data efficiently. Our application provides comprehensive API documentation for easy integration with your existing systems. Automate repetitive tasks and enhance your workflows with custom scripts. The APIs allow you to push and pull data seamlessly, ensuring synchronization across platforms. Additionally, developers can leverage our webhooks for real-time updates. The API support means that your data management can adapt to your evolving business needs. Empower your team with the flexibility to integrate data management into their workflows.</p>
+                <img src="{% static 'img/api_int.jpg' %}" alt="API Integration" />
             </div>
         </div>
-
+        
         <div class="info-section" id="section3">
-            <h2>Get Started</h2>
+            <h2>Responsive Design</h2>
             <div class="feature-item">
-                <p>To begin using the Company Count Application, please log in or register a new account. Once you're logged in, you can upload your CSV files and start filtering through the data!</p>
+                <img src="{% static 'img/design.jpg' %}" alt="Responsive Design" />
+                <p>Access the application from any device with a clean, responsive design. Our application is built with mobile-first principles, ensuring a seamless experience across all screen sizes. Whether you're on a smartphone, tablet, or desktop, the layout adjusts for optimal usability. The responsive design minimizes the need for zooming or scrolling, allowing users to interact with data effortlessly. Accessibility features are incorporated, catering to a diverse user base. Enjoy a consistent look and feel, regardless of the device you use. Experience the freedom of working from anywhere with our fully responsive application.</p>
             </div>
         </div>
+        
+        <!-- Single Proceed Button -->
+        <button onclick="window.location.href='{% url 'navbar' %}'" class="proceed-button">Proceed</button>
 
-        <button class="proceed-button" onclick="redirectToNavbar()">Proceed</button>
     </div>
-
+    
     <script>
-        function redirectToNavbar() {
-            window.location.href = "{% url 'navbar' %}";
-        }
-
-        // Function to handle scroll animations
-        function handleScroll() {
-            const sections = document.querySelectorAll('.info-section, .welcome-message');
-            const windowHeight = window.innerHeight;
-
-            sections.forEach(section => {
-                const sectionTop = section.getBoundingClientRect().top;
-
-                if (sectionTop < windowHeight * 0.8) {
-                    section.style.opacity = 1;
-                    section.style.transform = 'translateY(0)'; // Reset to original position
-                }
-            });
-        }
-
-        window.addEventListener('scroll', handleScroll);
-        window.addEventListener('load', handleScroll); // Trigger on initial load
+        document.addEventListener("DOMContentLoaded", function() {
+            const featureItems = document.querySelectorAll('.feature-item');
+        
+            function checkScroll() {
+                featureItems.forEach(item => {
+                    const rect = item.getBoundingClientRect();
+                    const windowHeight = window.innerHeight;
+        
+                    if (rect.top < windowHeight && rect.bottom >= 0) {
+                        // Check which side to animate from
+                        if (Array.from(featureItems).indexOf(item) % 2 === 0) {
+                            item.classList.add('animate-left'); // Add class to animate from left
+                        } else {
+                            item.classList.add('animate-right'); // Add class to animate from right
+                        }
+                    }
+                });
+            }
+        
+            // Check on scroll
+            window.addEventListener('scroll', checkScroll);
+            // Check on load to animate elements that are already in view
+            checkScroll();
+        });
     </script>
 </body>
 </html>
